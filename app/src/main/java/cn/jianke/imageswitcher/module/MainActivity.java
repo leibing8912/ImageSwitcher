@@ -7,6 +7,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import cn.jianke.imageswitcher.R;
+
 /**
  * @className: MainActivity
  * @classDescription: 图片选择器首页
@@ -44,7 +45,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             "图片url列表为空，请检查！",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                mPictureShowDialog = new PictureShowDialog(MainActivity.this, imageUrlList);
+                // 初始化Dialog
+                mPictureShowDialog = new PictureShowDialog(MainActivity.this);
+                // 添加数据源
+                mPictureShowDialog.loadRemoteImage(imageUrlList, MainActivity.this);
+                // 设定自动轮播
+                mPictureShowDialog.startAutoRotation(PictureShowDialog.AUTO_ROTATION_TIME);
+                // 显示对话框
                 mPictureShowDialog.show();
                 break;
             default:
