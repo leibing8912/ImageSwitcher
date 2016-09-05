@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -142,7 +143,8 @@ public class ImageLoader {
      * @param  isCropCircle 是否圆角
      * @return
      */
-    public void load(Context context, ImageView imageView, String url, Drawable defaultImage, Drawable errorImage ,boolean isCropCircle){
+    public void load(Context context, ImageView imageView, String url, Drawable defaultImage,
+                     Drawable errorImage ,boolean isCropCircle){
                 // 图片加载库采用Glide框架
                 DrawableTypeRequest request = Glide.with(context).load(url);
                 // 设置scaleType
@@ -203,7 +205,13 @@ public class ImageLoader {
      * @param  isCropCircle 是否圆角
      * @return
      */
-    public void load(Context context, ImageView imageView, File localPath, Drawable defaultImage, Drawable errorImage , boolean isCropCircle){
+    public void load(Context context, ImageView imageView, File localPath, Drawable defaultImage,
+                     Drawable errorImage , boolean isCropCircle){
+        if (!localPath.exists()){
+            Toast.makeText(context, "not local file  resources,please checkout it!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         // 图片加载库采用Glide框架
         DrawableTypeRequest request = Glide.with(context).load(localPath);
         // 设置scaleType

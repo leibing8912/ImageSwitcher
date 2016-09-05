@@ -1,5 +1,6 @@
 package cn.jianke.imageswitcher.module;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         // onClick
         findViewById(R.id.btn_open_window).setOnClickListener(this);
+        findViewById(R.id.turn_to_others).setOnClickListener(this);
         // 初始化图片url列表
         imageUrlList = new ArrayList<>();
         // 模拟数据
@@ -54,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mPictureShowDialog.startAutoRotation(PictureShowDialog.AUTO_ROTATION_TIME);
                 // 显示对话框
                 mPictureShowDialog.show();
+                break;
+            case R.id.turn_to_others:
+                // 跳转广告轮播页面
+                Intent intent = new Intent();
+                intent.setClass(this, AdsActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
