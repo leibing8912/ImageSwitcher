@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import java.io.File;
+import cn.jianke.imageswitcher.module.ThreadManager;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
@@ -47,11 +48,11 @@ public class ImageLoader {
      * @lastModify 2016/8/15
      * @param context 上下文
      * @param imageView 图片显示控件
-     * @param url 图片链接
+     * @param remoteUrl 远程图片链接
      * @return
      */
-    public void load(Context context, ImageView imageView, String url){
-        load(context, imageView, url, null, null,false);
+    public void load(Context context, ImageView imageView, String remoteUrl){
+        load(context, imageView, remoteUrl, null, null,false);
     }
 
     /**
@@ -61,7 +62,7 @@ public class ImageLoader {
      * @lastModify 2016/8/15
      * @param context 上下文
      * @param imageView 图片显示控件
-     * @param localFile 图片本地链接
+     * @param localFile 本地图片
      * @return
      */
     public void load(Context context, ImageView imageView, File localFile){
@@ -75,12 +76,42 @@ public class ImageLoader {
      * @lastModify 2016/8/15
      * @param context 上下文
      * @param imageView 图片显示控件
-     * @param url 图片链接
+     * @param remoteUrl 远程图片链接
      * @param isCropCircle 是否圆角
      * @return
      */
-    public void load(Context context, ImageView imageView, String url, boolean isCropCircle){
-        load(context, imageView, url, null, null,isCropCircle);
+    public void load(Context context, ImageView imageView, String remoteUrl, boolean isCropCircle){
+        load(context, imageView, remoteUrl, null, null,isCropCircle);
+    }
+
+    /**
+     * 图片加载
+     * @author leibing
+     * @createTime 2016/8/15
+     * @lastModify 2016/8/15
+     * @param context 上下文
+     * @param imageView 图片显示控件
+     * @param localFile 本地图片
+     * @param isCropCircle 是否圆角
+     * @return
+     */
+    public void load(Context context, ImageView imageView, File localFile, boolean isCropCircle){
+        load(context, imageView, localFile, null, null,isCropCircle);
+    }
+
+    /**
+     * 图片加载
+     * @author leibing
+     * @createTime 2016/8/15
+     * @lastModify 2016/8/15
+     * @param context 上下文
+     * @param imageView 图片显示控件
+     * @param localFile 本地图片
+     * @param defaultImage 默认占位图片
+     * @return
+     */
+    public void load(Context context, ImageView imageView, File localFile, Drawable defaultImage){
+        load(context, imageView, localFile, defaultImage, null, false);
     }
 
     /**
@@ -226,10 +257,15 @@ public class ImageLoader {
      * @param context
      * @return
      */
-    public void clearDiskCache(Context context){
+    public void clearDiskCache(final Context context){
         // 图片加载库采用Glide框架
         // 必须在后台线程中调用，建议同时clearMemory()
-        Glide.get(context).clearDiskCache();
+        ThreadManager.getInstance().getNewCachedThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(context).clearDiskCache();
+            }
+        });
     }
 
     /**

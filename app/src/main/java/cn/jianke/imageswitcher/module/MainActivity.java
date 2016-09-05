@@ -7,6 +7,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import cn.jianke.imageswitcher.R;
+import cn.jianke.imageswitcher.widget.PictureShowDialog;
 
 /**
  * @className: MainActivity
