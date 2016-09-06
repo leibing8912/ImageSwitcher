@@ -19,9 +19,14 @@
             android:layout_height="wrap_content"
             android:text="打开图片浏览器" />
         <Button
-            android:id="@+id/turn_to_others"
+            android:id="@+id/btn_turn_to_others"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="跳转广告轮播" />
+        <Button
+            android:id="@+id/btn_image_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图片选择器" />
     </LinearLayout>
 </RelativeLayout>

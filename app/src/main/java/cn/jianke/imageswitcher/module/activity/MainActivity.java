@@ -1,13 +1,17 @@
-package cn.jianke.imageswitcher.module;
+package cn.jianke.imageswitcher.module.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import cn.jianke.imageswitcher.R;
+import cn.jianke.imageswitcher.module.ImageConfig;
+import cn.jianke.imageswitcher.module.ImageSelector;
+import cn.jianke.imageswitcher.module.SeletorImageLoader;
 import cn.jianke.imageswitcher.widget.PictureShowDialog;
 
 /**
@@ -17,6 +21,9 @@ import cn.jianke.imageswitcher.widget.PictureShowDialog;
  * @createTime: 2016/08/25
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final String TAG = "MainActivity";
+    // 请求码
+    public static final int REQUEST_CODE = 1000;
     // 图片浏览器对话框
     private PictureShowDialog mPictureShowDialog;
     // 图片url列表
@@ -28,7 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         // onClick
         findViewById(R.id.btn_open_window).setOnClickListener(this);
-        findViewById(R.id.turn_to_others).setOnClickListener(this);
+        findViewById(R.id.btn_turn_to_others).setOnClickListener(this);
+        findViewById(R.id.btn_image_selector).setOnClickListener(this);
         // 初始化图片url列表
         imageUrlList = new ArrayList<>();
         // 模拟数据
@@ -57,14 +65,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // 显示对话框
                 mPictureShowDialog.show();
                 break;
-            case R.id.turn_to_others:
+            case R.id.btn_turn_to_others:
                 // 跳转广告轮播页面
                 Intent intent = new Intent();
                 intent.setClass(this, AdsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.btn_image_selector:
+                // 图片选择器
+                ImageConfig imageConfig
+                        = new ImageConfig.Builder(new SeletorImageLoader())
+                        // 如果在 4.4 以上，则修改状态栏颜色 （默认黑色）
+                        .steepToolBarColor(getResources().getColor(R.color.blue))
+                        // 标题的背景颜色 （默认黑色）
+                        .titleBgColor(getResources().getColor(R.color.blue))
+                        // 提交按钮字体的颜色  （默认白色）
+                        .titleSubmitTextColor(getResources().getColor(R.color.white))
+                        // 标题颜色 （默认白色）
+                        .titleTextColor(getResources().getColor(R.color.white))
+                        // 开启多选   （默认为多选）  (单选 为 singleSelect)
+//                        .singleSelect()
+//                        .crop()
+                        // 多选时的最大数量   （默认 9 张）
+                        .mutiSelectMaxSize(9)
+                        // 已选择的图片路径
+//                        .pathList(path)
+                        // 拍照后存放的图片路径（默认 /temp/picture）
+                        .filePath("/ImageSelector/Pictures")
+                        // 开启拍照功能 （默认开启）
+                        .showCamera()
+                        .requestCode(REQUEST_CODE)
+                        .build();
+                ImageSelector.open(MainActivity.this, imageConfig);   // 开启图片选择器
+                break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
+
+            for (String path : pathList) {
+                Log.v(TAG, path);
+            }
         }
     }
 }

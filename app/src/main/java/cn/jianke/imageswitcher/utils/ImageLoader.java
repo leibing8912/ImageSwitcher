@@ -17,7 +17,7 @@ import cn.jianke.imageswitcher.module.ThreadManager;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
- * @className: ImageLoader
+ * @className: InterfaceImageLoader
  * @classDescription: 图片加载库封装（不依赖单一第三方库，用作解耦）
  * @author: leibing
  * @createTime: 2016/8/15

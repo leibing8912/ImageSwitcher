@@ -1,4 +1,4 @@
-package cn.jianke.imageswitcher.module;
+package cn.jianke.imageswitcher.module.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
