@@ -1,11 +1,15 @@
 #ImageSwitcher
-一个基于Glide封装图片加载库、基于ViewFlipper方式实现封装图片浏览器对话框、广告轮播器的框架.
+一个基于Glide封装图片加载库、
+基于ViewFlipper方式实现封装图片浏览器对话框、
+广告轮播器、
+图片选择器的框架.
 
 ### 功能
 
 ###### 图片加载
 
-* 可加载本地和远程图片文件,本地需采用File访问,远程只需Url即可.可支持多种参数选择加载图片
+* 可加载本地和远程图片文件,本地需采用File访问,远程只需Url即可
+* 可支持多种参数选择加载图片
 
 ###### 图片浏览器对话框、广告轮播器
 
@@ -15,6 +19,12 @@
 * 可定制指示器
 * 支持本地与远程加载图片资源
 * 支持缩略图选择
+
+###### 图片选择器
+* Android自定义相册
+* 拍照
+* 图片选择（单选/多选)
+* ImageLoader无绑定
 
 ### Usage
 
@@ -26,7 +36,7 @@
 gradle:
 ```java
 dependencies {
-    compile 'cn.jianke.imageswitcher:app:1.0.1'
+    compile 'cn.jianke.imageswitcher:app:1.0.3'
 }
 ```
 maven:
@@ -34,14 +44,14 @@ maven:
 <dependency>
   <groupId>cn.jianke.imageswitcher</groupId>
   <artifactId>app</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.3</version>
   <type>pom</type>
 </dependency>
 ```
 
 lvy:
 ```java
-<dependency org='cn.jianke.imageswitcher' name='app' rev='1.0.1'>
+<dependency org='cn.jianke.imageswitcher' name='app' rev='1.0.3'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
@@ -63,6 +73,10 @@ MainActivity.class:
  * @createTime: 2016/08/25
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    // TAG
+    private static final String TAG = "MainActivity";
+    // 请求码
+    public static final int REQUEST_CODE = 1000;
     // 图片浏览器对话框
     private PictureShowDialog mPictureShowDialog;
     // 图片url列表
@@ -74,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(cn.jianke.imageswitcher.R.layout.activity_main);
         // onClick
         findViewById(R.id.btn_open_window).setOnClickListener(this);
-        findViewById(R.id.turn_to_others).setOnClickListener(this);
+        findViewById(R.id.btn_turn_to_others).setOnClickListener(this);
+        findViewById(R.id.btn_image_selector).setOnClickListener(this);
         // 初始化图片url列表
         imageUrlList = new ArrayList<>();
         // 模拟数据
@@ -103,14 +118,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // 显示对话框
                 mPictureShowDialog.show();
                 break;
-            case R.id.turn_to_others:
+            case R.id.btn_turn_to_others:
                 // 跳转广告轮播页面
                 Intent intent = new Intent();
                 intent.setClass(this, AdsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.btn_image_selector:
+                // 图片选择器
+                ImageConfig imageConfig
+                        = new ImageConfig.Builder(new SeletorImageLoader())
+                        // 如果在 4.4 以上，则修改状态栏颜色 （默认黑色）
+                        .steepToolBarColor(getResources().getColor(cn.jianke.imageswitcher.R.color.blue))
+                        // 标题的背景颜色 （默认黑色）
+                        .titleBgColor(getResources().getColor(cn.jianke.imageswitcher.R.color.blue))
+                        // 提交按钮字体的颜色  （默认白色）
+                        .titleSubmitTextColor(getResources().getColor(cn.jianke.imageswitcher.R.color.white))
+                        // 标题颜色 （默认白色）
+                        .titleTextColor(getResources().getColor(cn.jianke.imageswitcher.R.color.white))
+                        // 开启多选   （默认为多选）  (单选 为 singleSelect)
+//                        .singleSelect()
+//                        .crop()
+                        // 多选时的最大数量   （默认 9 张）
+                        .mutiSelectMaxSize(9)
+                        // 已选择的图片路径
+//                        .pathList(path)
+                        // 拍照后存放的图片路径（默认 /temp/picture）
+                        .filePath("/ImageSelector/Pictures")
+                        // 开启拍照功能 （默认开启）
+                        .showCamera()
+                        .requestCode(REQUEST_CODE)
+                        .build();
+                ImageSelector.open(MainActivity.this, imageConfig);   // 开启图片选择器
+                break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
+
+            for (String path : pathList) {
+                Log.v(TAG, path);
+            }
         }
     }
 }
@@ -171,6 +225,27 @@ public class AdsActivity extends AppCompatActivity {
 }
 
 ```
+
+SeletorImageLoader.class:
+
+```java
+/**
+ * @className: SeletorImageLoader
+ * @classDescription: 图片选择器图片加载
+ * @author: leibing
+ * @createTime: 2016/09/06
+ */
+public class SeletorImageLoader implements InterfaceImageLoader {
+    @Override
+    public void displayImage(Context context, String path, ImageView imageView) {
+        ImageLoader.getInstance().load(context,imageView,path,
+                context.getResources().getDrawable(cn.jianke.imageswitcher.R.mipmap.imageselector_photo));
+    }
+}
+
+```
+
+
 以上注释已经非常清晰,如有不明白之处请联系.
 
 
