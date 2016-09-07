@@ -392,7 +392,8 @@ public class ImageSelectorFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+    private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback =
+            new LoaderManager.LoaderCallbacks<Cursor>() {
 
         private final String[] IMAGE_PROJECTION = {
                 MediaStore.Images.Media.DATA,
@@ -458,11 +459,9 @@ public class ImageSelectorFragment extends Fragment {
                     if (resultList != null && resultList.size() > 0) {
                         imageAdapter.setDefaultSelected(resultList);
                     }
-
                     folderAdapter.setData(folderList);
 
                     hasFolderGened = true;
-
                 }
             }
         }

@@ -57,10 +57,9 @@ public class FolderAdapter extends BaseAdapter {
      * @return
      */
     public void setData(List<Folder> folders) {
+        folderList.clear();
         if (folders != null && folders.size() > 0) {
             folderList.addAll(folders);
-        } else {
-            folderList.clear();
         }
         notifyDataSetChanged();
     }
