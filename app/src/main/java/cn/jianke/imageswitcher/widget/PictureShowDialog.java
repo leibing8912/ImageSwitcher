@@ -221,6 +221,7 @@ public class PictureShowDialog extends Dialog implements GestureDetector.OnGestu
         this.mIndicatorUnselected = mIndicatorUnselected;
     }
 
+
     /**
      * 启动自动轮播
      * @author leibing

@@ -37,7 +37,7 @@
 gradle:
 ```java
 dependencies {
-    compile 'cn.jianke.imageswitcher:app:1.0.3'
+    compile 'cn.jianke.imageswitcher:app:1.0.4'
 }
 ```
 maven:
@@ -45,14 +45,14 @@ maven:
 <dependency>
   <groupId>cn.jianke.imageswitcher</groupId>
   <artifactId>app</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <type>pom</type>
 </dependency>
 ```
 
 lvy:
 ```java
-<dependency org='cn.jianke.imageswitcher' name='app' rev='1.0.3'>
+<dependency org='cn.jianke.imageswitcher' name='app' rev='1.0.4'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
